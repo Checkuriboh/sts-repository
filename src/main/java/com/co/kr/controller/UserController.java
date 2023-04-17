@@ -177,7 +177,7 @@ public class UserController {
 
 		//전체 갯수
 		int totalcount = userService.mbGetAll();
-		int contentnum = 10; // 데이터 가져올 갯수 
+		int contentnum = 10; // 페이지당 가져올 데이터 갯수 
 		
 		//데이터 유무 분기때 사용
 		boolean itemsNotEmpty;
@@ -188,7 +188,7 @@ public class UserController {
 			itemsNotEmpty = true;
 			
 			//페이지 표현 데이터 가져오기
-			Map<String,Object> pagination = Pagination.pagination(totalcount, request);
+			Map<String,Object> pagination = Pagination.uploadPagination(totalcount, contentnum, request);
 			
 			Map map = new HashMap<String, Integer>();
 	        map.put("offset",pagination.get("offset"));
@@ -253,7 +253,7 @@ public class UserController {
 		
 		//페이지 초기화
 		String page = (String) session.getAttribute("page");
-		if(page == null)page = "1";
+		if(page == null) page = "1";
 		
 		// 중복체크
 		Map<String, String> map = new HashMap();

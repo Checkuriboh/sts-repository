@@ -52,10 +52,10 @@
                 <li th:case="${rowNUM} > ${startpage}" style="display: inline-block">
                     <a class="icon first" th:href="@{mbList(page=${startpage})}">&laquo;</a>
                 </li>
-                <li th:case="${startpage} < 10" style="display: none;">
+                <li th:case="${startpage} > 10" style="display: none;">
                     <a class="icon first" th:href="@{mbList(page=${startpage}-10)}">&laquo;</a>
                 </li>
-                <li th:case="${startpage} > 10" style="display: inline-block;">
+                <li th:case="${startpage} < 10" style="display: inline-block;">
                     <a class="icon first" th:href="@{mbList(page=${1})}">&laquo;</a>
                 </li>
             </th:block>
