@@ -7,11 +7,17 @@
            	</div>
            
            	<ul class="nav">
-              	<th:block th:if="${session.mbLevel}==3"> 
-                   	<li class="on"><a class="menu1" th:href="@{mbList(page=1)}">맴버정보</a></li>
-               	</th:block>
                	<th:block>
                    	<li class="on"><a class="menu1" th:href="@{bdList}">보드정보</a></li>
+               	</th:block>
+              	<th:block th:if="${session.mbLevel}==3"> 
+                   	<li class="on"><a class="menu1" th:href="@{mbList(page=1)}">멤버정보</a></li>
+               	</th:block>
+              	<th:block th:if="${session.mbLevel}==3"> 
+                   	<li class="on"><a class="menu1" th:href="@{mbList(page=1)}">활동기록</a></li>
+               	</th:block>
+              	<th:block th:unless="${session.mbLevel}==3"> 
+                   	<li class="on"><a class="menu1" th:href="@{mbList(page=1)}">활동기록</a></li>
                	</th:block>
            	</ul>
        	</div>

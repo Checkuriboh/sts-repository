@@ -127,11 +127,10 @@ public class FileListController {
 			Path filePath = Paths.get(list.getUpFilePath());
 	 
 	        try {
-	        	
 	            // 파일 물리삭제
 	            Files.deleteIfExists(filePath); // notfound시 exception 발생안하고 false 처리
-	            // db 삭제 
-							uploadService.bdFileRemove(list);
+	            // DB 삭제 
+				uploadService.bdFileRemove(list);
 				
 	        } catch (DirectoryNotEmptyException e) {
 							throw RequestException.fire(Code.E404, "디렉토리가 존재하지 않습니다", HttpStatus.NOT_FOUND);
@@ -139,7 +138,7 @@ public class FileListController {
 	            e.printStackTrace();
 	        }
 		}
-
+		
 		//세션해제
 		session.removeAttribute("files"); // 삭제
 		mav = bdListCall();

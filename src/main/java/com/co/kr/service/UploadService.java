@@ -6,17 +6,18 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.co.kr.domain.BoardContentDomain;
 import com.co.kr.domain.BoardFileDomain;
 import com.co.kr.domain.BoardListDomain;
 import com.co.kr.vo.FileListVO;
 
 public interface UploadService {
+
+	// 전체 리스트 조회   // 지난시간 작성
+	public List<BoardListDomain> boardList();
 	
 	// 인서트
 	public int fileProcess(FileListVO fileListVO, MultipartHttpServletRequest request, HttpServletRequest httpReq);
-	
-	// 전체 리스트 조회   // 지난시간 작성
-	public List<BoardListDomain> boardList();
 
 	// 하나 삭제
 	public void bdContentRemove(HashMap<String, Object> map);

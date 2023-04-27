@@ -29,8 +29,8 @@ import com.co.kr.vo.LoginVO;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
-@Slf4j 
 @RequestMapping(value = "/")
 public class UserController {
 	

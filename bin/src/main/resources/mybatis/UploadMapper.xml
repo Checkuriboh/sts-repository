@@ -11,7 +11,8 @@
 
 	<!-- content insert -->
 	<insert id="contentUpload" parameterType="com.co.kr.domain.BoardContentDomain"
-			useGeneratedKeys="true" keyProperty="bdSeq" keyColumn="bd_seq">
+	useGeneratedKeys="true"
+        keyProperty="bdSeq" keyColumn="bd_seq">
 	
         INSERT INTO jsp.board (
             mb_id,   

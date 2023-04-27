@@ -39,6 +39,9 @@ public class UploadServiceImple implements UploadService {
 
 	@Autowired
 	private UploadMapper uploadMapper;
+
+	@Autowired
+	private LogService logService;
 	
 	@Override
 	public List<BoardListDomain> boardList() {
@@ -59,15 +62,19 @@ public class UploadServiceImple implements UploadService {
 				.build();
 		
 		if(fileListVO.getIsEdit() != null) {
-			boardContentDomain.setBdSeq(Integer.parseInt(fileListVO.getSeq()));
+			boardContentDomain.setBdSeq(Integer.parseInt(fileListVO.getSeq()));	
 			System.out.println("수정업데이트");
 			// DB 업데이트
 			uploadMapper.bdContentUpdate(boardContentDomain);
-		}else {	
+			// log 추가
+			logService.logCreate("수정", boardContentDomain);	
+		}else {
+			System.out.println("DB 인서트");
 			// DB 인서트
 			uploadMapper.contentUpload(boardContentDomain);
-			System.out.println(" db 인서트");
-			}
+			// log 추가
+			logService.logCreate("작성", boardContentDomain);
+		}
 		
 		// file 데이터 DB 저장시 쓰일 값 추출
 		int bdSeq = boardContentDomain.getBdSeq();
@@ -181,6 +188,16 @@ public class UploadServiceImple implements UploadService {
 
 	@Override
 	public void bdContentRemove(HashMap<String, Object> map) {
+		//log 추가
+		BoardListDomain bld = boardSelectOne(map);
+		BoardContentDomain boardContentDomain = BoardContentDomain.builder()
+				.bdSeq(Integer.parseInt(bld.getBdSeq()))
+				.mbId(bld.getMbId())
+				.bdTitle(bld.getBdTitle())
+				.build();
+		logService.logCreate("삭제", boardContentDomain);
+		
+		// 삭제
 		uploadMapper.bdContentRemove(map);
 	}
 

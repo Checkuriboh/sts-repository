@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.co.kr.mapper.LogMapper">
+
+	<!-- select all -->
+	<select id="logList" resultType="com.co.kr.domain.LogDomain">
+		SELECT log_seq, bd_seq, mb_id, bd_title, log_crud, bd_update_at
+		FROM jsp.log
+		ORDER BY bd_update_at desc
+	</select>
+	
+	<!-- count all -->
+	<select id="logGetAll" resultType="int">
+	   SELECT COUNT(*) FROM jsp.log
+	</select>
+	
+	<!-- insert new one -->
+	<insert id="logUpload" parameterType="hashmap"
+			useGeneratedKeys="true" keyProperty="logSeq" keyColumn="log_seq">
+		INSERT INTO jsp.log (bd_seq, mb_id, bd_title, log_crud, bd_update_at)
+		VALUES (#{bdSeq}, #{mbId}, #{bdTitle}, #{logCrud}, now())
+	</insert>
+	
+</mapper>
