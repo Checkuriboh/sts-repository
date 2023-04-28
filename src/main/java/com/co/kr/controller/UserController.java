@@ -20,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.co.kr.domain.BoardListDomain;
+import com.co.kr.domain.LogDomain;
 import com.co.kr.domain.LoginDomain;
+import com.co.kr.service.LogService;
 import com.co.kr.service.UploadService;
 import com.co.kr.service.UserService;
 import com.co.kr.util.CommonUtils;
@@ -39,6 +41,9 @@ public class UserController {
 	
 	@Autowired
 	private UploadService uploadService;
+	
+	@Autowired
+	private LogService logService;
 
 	@RequestMapping(value = "board")
 	public ModelAndView login(LoginVO loginDTO, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -124,7 +129,7 @@ public class UserController {
 				.mbUse("Y")
 				.build();
 		userService.mbUpdate(loginDomain);
-		
+		 
 		//첫 페이지로 이동
 		re.addAttribute("page", page); // 리다이렉트시 파람으로 실어서 보냄
 		mav.setViewName("redirect:/mbList");
@@ -150,6 +155,55 @@ public class UserController {
 		return mav;
 	};
 	
+	// 활동 내역 화면으로 이동
+	@GetMapping("logList")
+	public ModelAndView logList(HttpServletRequest request)
+	{
+		ModelAndView mav = new ModelAndView();
+		
+		HttpSession session = request.getSession();
+		String page = (String) session.getAttribute("page");
+		if (page == null) { page = "1"; }
+		session.setAttribute("page", page);
+
+		int totalcount = logService.logGetAll();
+		int contentnum = 10; // 페이지당 가져올 데이터 갯수 
+		
+		//데이터 유무 분기때 사용
+		boolean itemsNotEmpty;
+		
+		if(totalcount > 0) { // 데이터 있을때
+			
+			// itemsNotEmpty true일때만, 리스트 & 페이징 보여주기
+			itemsNotEmpty = true;
+			
+			//페이지 표현 데이터 가져오기
+			Map<String,Object> pagination = Pagination.uploadPagination(totalcount, contentnum, request);
+			
+			Map map = new HashMap<String, Integer>();
+	        map.put("offset", pagination.get("offset"));
+	        map.put("contentnum", contentnum);
+	        map.put("id", session.getAttribute("id"));
+			
+	        //페이지별 데이터 가져오기
+			List<LogDomain> logDomain = logService.logAllList(map);
+			
+			//모델객체 넣어주기
+			mav.addObject("itemsNotEmpty", itemsNotEmpty);
+			mav.addObject("items", logDomain);
+			mav.addObject("rowNUM", pagination.get("rowNUM"));
+			mav.addObject("pageNum", pagination.get("pageNum"));
+			mav.addObject("startpage", pagination.get("startpage"));
+			mav.addObject("endpage", pagination.get("endpage"));
+		}
+		else
+		{ itemsNotEmpty = false; }
+		
+		mav.setViewName("log/logList.html");
+		
+		return mav; 
+	}
+	
 	//대시보드 리스트 보여주기
 	@GetMapping("mbList")
 	public ModelAndView mbList(HttpServletRequest request) {
@@ -166,6 +220,24 @@ public class UserController {
 		mav = mbListCall(request);  //리스트만 가져오기
 		
 		mav.setViewName("admin/adminList.html");
+		return mav; 
+	};
+	
+	//대시보드 리스트 보여주기
+	@GetMapping("mbEditList")
+	public ModelAndView mbListEdit(@RequestParam("mbSeq") String mbSeq, HttpServletRequest request) {
+		
+		ModelAndView mav = new ModelAndView();
+		
+		// 해당리스트 가져옴
+		Map map = new HashMap<String, String>();
+		map.put("mbSeq", mbSeq);
+		LoginDomain loginDomain = userService.mbSelectList(map);
+		
+		mav = mbListCall(request);  
+		mav.addObject("item",loginDomain);
+		mav.setViewName("admin/adminEditList.html");
+		
 		return mav; 
 	};
 	
@@ -191,8 +263,8 @@ public class UserController {
 			Map<String,Object> pagination = Pagination.uploadPagination(totalcount, contentnum, request);
 			
 			Map map = new HashMap<String, Integer>();
-	        map.put("offset",pagination.get("offset"));
-	        map.put("contentnum",contentnum);
+	        map.put("offset", pagination.get("offset"));
+	        map.put("contentnum", contentnum);
 			
 	        //페이지별 데이터 가져오기
 			List<LoginDomain> loginDomain = userService.mbAllList(map);
@@ -218,21 +290,6 @@ public class UserController {
 		re.addAttribute("mbSeq", mbSeq);
 		mav.setViewName("redirect:/mbEditList");
 		return mav;
-	};
-	
-	//대시보드 리스트 보여주기
-	@GetMapping("mbEditList")
-	public ModelAndView mbListEdit(@RequestParam("mbSeq") String mbSeq, HttpServletRequest request) {
-		
-		ModelAndView mav = new ModelAndView();
-		// 해당리스트 가져옴
-		mav = mbListCall(request);  
-		Map map = new HashMap<String, String>();
-		map.put("mbSeq", mbSeq);
-		LoginDomain loginDomain = userService.mbSelectList(map);
-		mav.addObject("item",loginDomain);
-		mav.setViewName("admin/adminEditList.html");
-		return mav; 
 	};
 	
 	// 회원가입 화면

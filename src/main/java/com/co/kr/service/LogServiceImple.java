@@ -2,6 +2,7 @@ package com.co.kr.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,12 @@ public class LogServiceImple implements LogService {
 	private LogMapper logMapper;
 	
 	@Override
-	public List<LogDomain> logList()
-	{ return logMapper.logList(); }
+	public List<LogDomain> logAllList(Map<String, Object> map)
+	{ return logMapper.logAllList(map); }
+
+	@Override
+	public List<LogDomain> logOwnList(Map<String, Object> map)
+	{ return logMapper.logOwnList(map); }
 	
 	@Override
 	public int logGetAll()

@@ -9,7 +9,7 @@
 	</select>
 	
     <!-- selectAll -->
-	<select id="mbAllList" resultType="com.co.kr.domain.LoginDomain" parameterType="map">
+	<select id="mbAllList" resultType="com.co.kr.domain.LoginDomain" parameterType="hashmap">
 	    SELECT * FROM jsp.member order by mb_update_at desc limit #{offset}, #{contentnum}
 	</select>
 	

@@ -57,9 +57,9 @@ public class Pagination {
 		// HttpSession session = request.getSession();
 		// String pnum = (String) session.getAttribute("Gnum");
 		String pnum = request.getParameter("page");
-		
-		System.out.println("pnum" + pnum);
+
 		if (pnum == null) { pnum = "1"; }
+		System.out.println("pnum " + pnum);
 		
 		// 스트링을 인트로 파싱
 		int rowNUM = Integer.parseInt(pnum);
@@ -70,7 +70,7 @@ public class Pagination {
 		if (Gtotal % pageCount == 0)
 		{ pageNum = Gtotal / pageCount; }
 		else
-		{ pageNum = (Gtotal / pageCount) + 1; }
+		{ pageNum = Gtotal / pageCount + 1; }
 	
 		if(rowNUM > pageNum) { rowNUM = pageNum; }
 		
@@ -79,7 +79,7 @@ public class Pagination {
 		int startpage = rowNUM - temp; // temp는 startpage보다 끝자리 항상 1작음 27-6   21
 		int endpage = startpage + (10 - 1); // 10 20 30 40
 	
-		// startpage기준 무조건 +9 한 것이어서 pageCount 비교 후 pageCount 적용
+		// startpage 기준 무조건 +9 한 것이어서 pageCount 비교 후 pageCount 적용
 		if (endpage > pageNum) { endpage = pageNum; } 
 		
 		// 쿼리 범위 지정
