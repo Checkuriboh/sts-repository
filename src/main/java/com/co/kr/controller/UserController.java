@@ -160,35 +160,29 @@ public class UserController {
 	public ModelAndView logList(HttpServletRequest request)
 	{
 		ModelAndView mav = new ModelAndView();
-		
+		 
 		HttpSession session = request.getSession();
 		String page = (String) session.getAttribute("page");
 		if (page == null) { page = "1"; }
 		session.setAttribute("page", page);
 
 		int totalcount = logService.logGetAll();
-		int contentnum = 10; // 페이지당 가져올 데이터 갯수 
+		int contentnum = 10;
 		
-		//데이터 유무 분기때 사용
 		boolean itemsNotEmpty;
 		
-		if(totalcount > 0) { // 데이터 있을때
-			
-			// itemsNotEmpty true일때만, 리스트 & 페이징 보여주기
+		if(totalcount > 0) {
+			 
 			itemsNotEmpty = true;
 			
-			//페이지 표현 데이터 가져오기
 			Map<String,Object> pagination = Pagination.uploadPagination(totalcount, contentnum, request);
 			
 			Map map = new HashMap<String, Integer>();
 	        map.put("offset", pagination.get("offset"));
 	        map.put("contentnum", contentnum);
-	        map.put("id", session.getAttribute("id"));
 			
-	        //페이지별 데이터 가져오기
 			List<LogDomain> logDomain = logService.logAllList(map);
 			
-			//모델객체 넣어주기
 			mav.addObject("itemsNotEmpty", itemsNotEmpty);
 			mav.addObject("items", logDomain);
 			mav.addObject("rowNUM", pagination.get("rowNUM"));
