@@ -182,6 +182,7 @@ public class UserController {
 	        map.put("contentnum", contentnum);
 			
 			List<LogDomain> logDomain = logService.logAllList(map);
+			//List<LogDomain> logDomain = logService.logOwnList(map);
 			
 			mav.addObject("itemsNotEmpty", itemsNotEmpty);
 			mav.addObject("items", logDomain);
